@@ -1,72 +1,77 @@
-# Ainz Boomeranger
+# 💀 Ainz Boomeranger
 
-Mod visual de **Trove** que veste o Boomeranger como **Ainz Ooal Gown** (Overlord): manto
-roxo e dourado até os pés, capa longa com gola de espinhos, capuz e máscara de caveira, o
-Cajado de Ainz Ooal Gown, efeitos das skills em violeta e verde espectral e galinhas
-esqueleto. **Só aparência**: nenhum dano ou mecânica muda.
+A cosmetic **Trove** mod that dresses the Boomeranger as **Ainz Ooal Gown** (Overlord): a floor-length purple and gold robe, a long cape with a spiked collar, a hood and skull mask, the Staff of Ainz Ooal Gown, skill effects in violet and spectral green, and skeleton chickens. **Looks only**: no damage or mechanics change.
 
-Baixe o `.tmod` na página de [Releases](../../releases).
+Download the `.tmod` from the [Releases](../../releases) page.
 
-## Instalar
+## ✨ Technologies
 
-1. Feche o Trove.
-2. Copie `Ainz Boomeranger.tmod` para a pasta `mods` do jogo
-   (Glyph: `C:\Program Files (x86)\Glyph\Games\Trove\Live\mods`), ou adicione pelo
-   Better Trove Tools e clique em **Reload Mods**.
-3. Desative outros mods que troquem o Boomeranger (ex.: *Elise, Queen of Spiders*): eles
-   substituem os mesmos arquivos.
+- `Python 3` (standard library only)
+- `Pillow` (previews)
+- Custom codecs for Trove's `.tmod`, `.blueprint`, `.qb`, `.tfi`/`.tfa` and PopcornFX `.pkfx` formats
 
-## O que equipar
+## 🚀 Features
 
-| Slot | Escolha | O que muda |
-|------|---------|------------|
-| Traje | **Bumeranguer Nível 20** (`adventurer_lvl3`) | corpo, manto, capa e modelos das skills |
-| Chapéu | **Capuz Negro** (Dark Hood) | capuz do Ainz |
-| Rosto | **Meio-Crânio Assombrado** (Haunting Halfskull) | máscara de caveira |
-| Arma | **Espada Lascada** (espada inicial) | Cajado de Ainz Ooal Gown |
+- **Full outfit** - 13 body pieces and 4 skill models for the Boomeranger costume
+- **Hood, mask and staff** - Swap in over the Dark Hood, Haunting Halfskull and the starter sword
+- **Skeleton chickens** - 9 chicken pieces based on the game's Undead skin, with spectral green eyes
+- **Recolored VFX** - 21 PopcornFX particle scripts recolored in violet and green; healing, energy, fairy and shield effects keep the original colors on purpose
+- **Reproducible build** - The whole mod (52 files) is built from source with one command
+- **Previews without the game** - Orthographic renders of every part
 
-Os efeitos de partícula das skills e as galinhas esqueleto (inclusive a galinha grande)
-valem com qualquer traje padrão. Capuz, máscara e cajado trocam esses itens para qualquer
-classe — apenas no seu cliente: mods do Trove não mudam o que os outros jogadores veem.
+## 📍 The Process
 
-## Conteúdo do mod (52 arquivos)
+Trove mods are packed in a binary `.tmod` container, so before changing a single color I had to be able to read and write it, including the game's FNV-1a checksum. From there I wrote codecs for the `.blueprint` model format (v5, plus reading v3/v4), the game's `index.tfi` / `archiveN.tfa` archives and Qubicle `.qb` files.
 
-- 13 peças de corpo `c_p_adventurer_lvl3_*`, 4 modelos de skill `c_p_adventurer_basic_*`
-- capuz `equipment_helm_darkhood` e máscara `equipment_face_mask_halfskull[destral]`
-- cajado sobre `equipment_weapon_1h_sword_001`
-- 9 peças da galinha `c_c_quchik_*` (a skin Undead do jogo, olhos em verde espectral)
-- 21 scripts de partícula `particles/vfx/particles/character_pc_adventurer_*.pkfx`
-  recoloridos (cura, energia, fada e escudo ficam no original de propósito)
+The models start from existing community mods and vanilla assets, re-fitted and recolored with an Ainz palette. The particle effects were the trickiest part: PopcornFX stores colors as curves, so `vfx.py` remaps them linearly to keep each curve's shape while changing its hue. A small renderer produces orthographic previews, so I could iterate without launching the game every time.
 
-## Ferramentas
+## 🎯 Tools
 
-Python 3, só biblioteca padrão + Pillow para os previews.
-
-| Módulo | Faz |
+| Module | What it does |
 |--------|-----|
-| `tools/tmod.py` | lê e escreve o container `.tmod`, incluindo o checksum FNV-1a do Trove |
-| `tools/blueprint.py` | codec de `.blueprint` (kiwib) v5, e leitura de v3/v4 |
-| `tools/tfa.py` | lê os arquivos `index.tfi` / `archiveN.tfa` do jogo |
-| `tools/qb.py`, `tools/model.py` | Qubicle `.qb` e o devtool do jogo (rota alternativa) |
-| `tools/theme.py` | paleta do Ainz sobre as cores dos modelos doadores |
-| `tools/vfx.py` | recolore curvas de cor PopcornFX (`.pkfx`) de forma linear, preservando a forma das curvas |
-| `tools/ainz_parts.py` | manto, capa, cajado e galinhas esqueleto |
-| `tools/render.py` | previews ortográficos sem abrir o jogo |
-| `tools/build.py` | monta o mod: `py -m tools.build` escreve `dist/` |
+| `tools/tmod.py` | Reads and writes the `.tmod` container, including Trove's FNV-1a checksum |
+| `tools/blueprint.py` | `.blueprint` (kiwib) v5 codec, plus reading v3/v4 |
+| `tools/tfa.py` | Reads the game's `index.tfi` / `archiveN.tfa` files |
+| `tools/qb.py`, `tools/model.py` | Qubicle `.qb` and the game's devtool (alternative route) |
+| `tools/theme.py` | Ainz palette applied over the donor models' colors |
+| `tools/vfx.py` | Linearly recolors PopcornFX (`.pkfx`) color curves, preserving their shape |
+| `tools/ainz_parts.py` | Robe, cape, staff and skeleton chickens |
+| `tools/render.py` | Orthographic previews without opening the game |
+| `tools/build.py` | Builds the mod: `py -m tools.build` writes `dist/` |
 
-## Rebuild
+## 🚦 Installing
 
-Os arquivos de terceiros não estão no repositório. Para gerar o mod do zero:
+1. Close Trove.
+2. Copy `Ainz Boomeranger.tmod` to the game's `mods` folder
+   (Glyph: `C:\Program Files (x86)\Glyph\Games\Trove\Live\mods`), or add it through
+   Better Trove Tools and click **Reload Mods**.
+3. Disable other mods that replace the Boomeranger (for example *Elise, Queen of Spiders*): they
+   overwrite the same files.
 
-1. Coloque os mods originais em `sources/death-lord/Death Lord.tmod`
-   (Workshop 1520979943) e `sources/elise/Elise.tmod`, e extraia os blueprints para
-   `work/death-lord/blueprints` e `work/elise/blueprints` com `tools.tmod.extract_tmod`.
-2. Extraia do jogo os modelos vanilla para `work/game-assets/blueprints` e as partículas
-   listadas em `tools/vfx.py::EFFECTS` para `work/game-assets/particles`:
-   `py -m tools.tfa "<Trove>/Live/blueprints" extract <nomes> -o work/game-assets/blueprints`.
+### What to equip
+
+| Slot | Choice | What changes |
+|------|---------|------------|
+| Costume | **Boomeranger Level 20** (`adventurer_lvl3`) | body, robe, cape and skill models |
+| Hat | **Dark Hood** | Ainz's hood |
+| Face | **Haunting Halfskull** | skull mask |
+| Weapon | **Chipped Sword** (starter sword) | Staff of Ainz Ooal Gown |
+
+The skill particle effects and the skeleton chickens (including the big chicken) work with any default costume. The hood, mask and staff replace those items for every class, but only on your client: Trove mods don't change what other players see.
+
+## 🔧 Rebuilding
+
+Third-party files are not in the repository. To build the mod from scratch:
+
+1. Place the original mods at `sources/death-lord/Death Lord.tmod`
+   (Workshop 1520979943) and `sources/elise/Elise.tmod`, and extract the blueprints to
+   `work/death-lord/blueprints` and `work/elise/blueprints` with `tools.tmod.extract_tmod`.
+2. Extract the vanilla models from the game to `work/game-assets/blueprints` and the particles
+   listed in `tools/vfx.py::EFFECTS` to `work/game-assets/particles`:
+   `py -m tools.tfa "<Trove>/Live/blueprints" extract <names> -o work/game-assets/blueprints`.
 3. `py -m tools.build`
 
-Testes (precisam dos arquivos acima; alguns também do jogo instalado):
+Tests (they need the files above; some also need the game installed):
 
 ```bash
 py -m unittest tests.test_tmod tests.test_tmod_hash tests.test_tmod_write tests.test_qb_read \
@@ -74,14 +79,15 @@ py -m unittest tests.test_tmod tests.test_tmod_hash tests.test_tmod_write tests.
   tests.test_render tests.test_build tests.test_vfx
 ```
 
-## Créditos
+## 🙌 Credits
 
-- **NeodymiumP** — mod *Death Lord*: manto, mãos, capuz, máscara e o Cajado de Ainz Ooal
-  Gown são modelos dele, re-encaixados e recoloridos aqui.
-- *Elise, Queen of Spiders* (publicado por 激萌的啡色小熊) — referência e modelos das skills
-  do Boomeranger e das pernas.
-- **Better Trove Tools** — referência dos formatos `.tmod`, `.blueprint` e `.qb`.
-- Trove é da Gamigo; Ainz Ooal Gown / Overlord é de Kugane Maruyama. Mod de fã, sem
-  vínculo oficial.
+- **NeodymiumP**, *Death Lord* mod: the robe, hands, hood, mask and Staff of Ainz Ooal Gown are their models, re-fitted and recolored here.
+- *Elise, Queen of Spiders* (published by 激萌的啡色小熊): reference and models for the Boomeranger skills and legs.
+- **Better Trove Tools**: reference for the `.tmod`, `.blueprint` and `.qb` formats.
+- Trove belongs to Gamigo; Ainz Ooal Gown / Overlord belongs to Kugane Maruyama. Fan mod, not affiliated.
 
-Autor do mod: **Xlabausaum**.
+Mod author: **Xlabausaum**.
+
+## 🎞️ Preview
+
+<!-- TODO: add an in-game screenshot or a render from tools/render.py -->
