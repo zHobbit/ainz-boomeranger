@@ -1,0 +1,13 @@
+# Third-party and game material: never published, see README "Rebuild".
+sources/
+work/
+reference/
+dist/
+build/
+
+# Local notes
+HANDOFF.md
+INSTALL-QODER-TO-KIMI.md
+
+__pycache__/
+*.pyc
